@@ -1,0 +1,42 @@
+{
+  "Cursor 使い方": [
+    {"keyword": "Cursorとは 始め方 2026", "priority": "high", "status": "pending"},
+    {"keyword": "Cursor 無料でできること", "priority": "high", "status": "pending"},
+    {"keyword": "Cursor インストール 初期設定", "priority": "high", "status": "pending"}
+  ],
+  "Cursor 料金・プラン": [
+    {"keyword": "Cursor 料金プラン比較 2026", "priority": "high", "status": "pending"},
+    {"keyword": "Cursor Free vs Pro 違い", "priority": "high", "status": "pending"},
+    {"keyword": "Cursor Business プラン 企業向け", "priority": "medium", "status": "pending"}
+  ],
+  "Cursor vs Copilot": [
+    {"keyword": "Cursor vs GitHub Copilot 2026", "priority": "high", "status": "pending"},
+    {"keyword": "Cursor vs Windsurf 比較", "priority": "high", "status": "pending"},
+    {"keyword": "Cursor Copilot どっちがいい", "priority": "medium", "status": "pending"}
+  ],
+  "Cursor 最新ニュース": [
+    {"keyword": "Cursor セキュリティエージェント登場", "priority": "high", "status": "pending"},
+    {"keyword": "Cursor 月額20ドル 価格横並び", "priority": "high", "status": "pending"},
+    {"keyword": "Cursor 最新アップデート 2026", "priority": "medium", "status": "pending"}
+  ],
+  "Cursor エージェント機能": [
+    {"keyword": "Cursor Agent機能 使い方", "priority": "high", "status": "pending"},
+    {"keyword": "Cursor 自律コーディング やり方", "priority": "high", "status": "pending"},
+    {"keyword": "Cursor Background Agent 解説", "priority": "medium", "status": "pending"}
+  ],
+  "Cursor 活用テクニック": [
+    {"keyword": "Cursor 効率化ショートカット集", "priority": "high", "status": "pending"},
+    {"keyword": ".cursorrules 活用術 書き方", "priority": "high", "status": "pending"},
+    {"keyword": "Cursor プロンプトエンジニアリング", "priority": "medium", "status": "pending"}
+  ],
+  "AIコードエディタ比較": [
+    {"keyword": "AIコードエディタ 4社比較 2026", "priority": "high", "status": "pending"},
+    {"keyword": "Cursor vs Claude Code 比較", "priority": "high", "status": "pending"},
+    {"keyword": "AI開発ツール おすすめランキング", "priority": "medium", "status": "pending"}
+  ],
+  "Cursor 設定・カスタマイズ": [
+    {"keyword": "Cursor おすすめ設定 2026", "priority": "high", "status": "pending"},
+    {"keyword": "Cursor 拡張機能 TOP10", "priority": "high", "status": "pending"},
+    {"keyword": "Cursor テーマ カスタマイズ", "priority": "medium", "status": "pending"}
+  ]
+}
