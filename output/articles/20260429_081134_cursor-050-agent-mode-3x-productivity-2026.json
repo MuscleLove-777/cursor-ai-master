@@ -1,0 +1,40 @@
+{
+  "title": "Cursor 0.50時代のAgent Mode活用術 - 開発生産性3倍化2026",
+  "content": "# Cursor 0.50時代のAgent Mode活用術 - 開発生産性3倍化2026\n\n## この記事でわかること\n- Cursor 0.50系で正式採用された Agent Mode の使いどころ\n- Chat / Composer / Agent の使い分けで生産性を3倍にする思考フレーム\n- Agent に任せて事故らないための制約設定\n\n## 結論\nCursor の Agent Mode は「自分が手を動かしている時間」と「AIに任せている時間」を分離するためのスイッチです。中級開発者は3つのモード（Chat / Composer / Agent）を意識的に切り替えることで、コードを書いている時間そのものを短縮できます。生産性3倍は誇張ではなく、慣れたユーザーの実感値として現実的な数値です。\n\n## 本題\n### 3つのモードを目的別に使い分ける\nCursor 0.50 時代に押さえておくべき3モードの役割は次の通りです。\n\n- **Chat**: 1ファイル単位の質問・コード断片の生成\n- **Composer**: 複数ファイルにまたがる差分編集（人間がレビューしながら適用）\n- **Agent**: マルチステップでツール（ファイル編集・ターミナル・テスト実行）を自律実行\n\n中級者の典型的な失敗は「全部 Agent でやろうとする」または「全部 Chat で済ませようとする」のどちらかです。\n\n### Agent Mode が真価を発揮するタスク\nAgent に渡して当たりが出やすいのは、以下のような「目標が明確で、ファイルを横断するが新規設計は不要」なタスクです。\n\n- 既存ロジックの命名一括リネーム（例: `handleClick` → `onClick` 全置換）\n- ライブラリのバージョンアップに伴う API 変更追従\n- ESLint / TypeScript の警告を1ジャンル単位でまとめて解消\n- 既存テストを CI で動かすためのモック作成\n\n逆に「新機能を1から設計しながら作る」タスクは、Composer で人間がリードしたほうが結果的に速いです。\n\n### Agent に渡すプロンプトの構造\nAgent は内部で計画 → 実行 → 検証のループを回すので、プロンプトには「目標」「終了条件」「禁止事項」の3つを必ず含めます。\n\n```\n目標: src/lib/api/ 以下のすべての fetch 呼び出しを ky に置き換える\n終了条件:\n- src/lib/api/ 以下に \"fetch(\" の文字列が残っていない\n- npm test がすべて通る\n- 既存の型定義は変更しない\n禁止事項:\n- 新規パッケージ追加は ky 以外しない\n- src/lib/api/ 以外のファイルは編集しない\n```\n\nこのフォーマットだけで、Agent の実行精度がぐっと安定します。\n\n### コンテキスト管理: @ で渡すか、Project Rules で渡すか\nCursor 0.50 系では Project Rules（`.cursor/rules/*.mdc`）が安定運用に乗っており、リポジトリのコーディング規約や禁止事項はここに常駐させるのがベストプラクティスです。\n\n- `.cursor/rules/typescript.mdc`: 型運用ルール\n- `.cursor/rules/api.mdc`: バックエンドAPI のレスポンス規約\n- `.cursor/rules/ui.mdc`: コンポーネント命名・配置ルール\n\nタスクごとの一時的なコンテキスト（特定の Issue や設計メモ）は `@` 参照で渡すと、Agent のループ中も維持されます。\n\n### 事故らないためのガードレール\nAgent はターミナルコマンドを実行できるので、設定次第ではローカル環境を破壊できます。最低限のガードとして次を仕込んでおきます。\n\n1. **危険コマンドは要確認**: 設定で `rm -rf` や `git push --force` を確認必須に\n2. **ブランチ運用**: Agent 用作業ブランチを切り、メインブランチを直接触らせない\n3. **コミット粒度**: 各ステップ後に小さくコミット → 戻しやすくする\n4. **テスト前提**: テストが整っていないリポジトリで Agent を全開放しない\n\n### 生産性3倍を狙う1日の運用例\n- 朝1時間: 機能の骨格を Composer で書く\n- 午前後半〜午後前半: Agent に「型エラー解消」「テスト追加」など機械的タスクを並列投入し、自分は別機能の設計\n- 夕方: Agent の差分をレビュー → マージ → 翌日のタスクを Issue 化\n\nこれで「コードを書く時間」と「設計する時間」を分離でき、結果として実装スループットが大きく伸びます。\n\n## よくある質問（FAQ）\n### Q1: 既存リポジトリにいきなり Agent を使うのは危険ですか？\nA1: いきなり mass refactor を任せるのは危険です。まずは小さなジャンルのタスク（lint 警告解消など）で挙動を観察し、Project Rules を整えてから本格運用に進めるのが安全です。\n\n### Q2: Copilot Workspace と比べて Cursor の Agent はどう違いますか？\nA2: Copilot Workspace は GitHub Issue 起点でクラウド側で完結する設計、Cursor の Agent はローカル IDE と密結合でファイル編集とターミナル実行を直接行う設計です。手元で見ながら進めたいなら Cursor、Issue から自動で動かしたいなら Copilot Workspace、という棲み分けです。\n\n### Q3: 料金プランはどれが向いていますか？\nA3: Agent をフル活用するなら Pro 以上が現実的です。Hobby プランだとリクエスト枠が早めに尽きるケースが多いです。\n\n## まとめ\nCursor 0.50 の Agent Mode は「使うタスクを選べば3倍速、選び間違えれば0.5倍速」という両刃のツールです。Chat / Composer / Agent を意識的に切り替え、Project Rules でガードレールを敷くことで、中級開発者でも安定して生産性を伸ばせます。明日からまずは「lint 警告の一括解消」だけ Agent に任せてみるのが入り口としておすすめです。\n",
+  "meta_description": "Cursor 0.50 の Agent Mode を中級者が使いこなすための活用術。Chat / Composer / Agent の使い分け、Project Rules によるガードレール、生産性3倍を狙う1日の運用例を解説。",
+  "tags": [
+    "Cursor",
+    "Agent Mode",
+    "生産性",
+    "Project Rules",
+    "Composer"
+  ],
+  "slug": "cursor-050-agent-mode-3x-productivity-2026",
+  "faq": [
+    {
+      "question": "Q1: 既存リポジトリにいきなり Agent を使うのは危険ですか？",
+      "answer": "いきなり mass refactor を任せるのは危険です。まずは小さなジャンルのタスク（lint 警告解消など）で挙動を観察し、Project Rules を整えてから本格運用に進めるのが安全です。"
+    },
+    {
+      "question": "Q2: Copilot Workspace と比べて Cursor の Agent はどう違いますか？",
+      "answer": "Copilot Workspace は GitHub Issue 起点でクラウド側で完結する設計、Cursor の Agent はローカル IDE と密結合でファイル編集とターミナル実行を直接行う設計です。手元で見ながら進めたいなら Cursor、Issue から自動で動かしたいなら Copilot Workspace、という棲み分けです。"
+    },
+    {
+      "question": "Q3: 料金プランはどれが向いていますか？",
+      "answer": "Agent をフル活用するなら Pro 以上が現実的です。Hobby プランだとリクエスト枠が早めに尽きるケースが多いです。"
+    }
+  ],
+  "hero_emoji": "📝",
+  "hero_gradient": "135deg",
+  "keyword": "Cursor",
+  "category": "Cursor 実践",
+  "generated_at": "2026-04-29T08:11:34.844711",
+  "seo_score": 85,
+  "jsonld": [
+    "<script type=\"application/ld+json\">\n{\n  \"@context\": \"https://schema.org\",\n  \"@type\": \"BlogPosting\",\n  \"headline\": \"Cursor 0.50時代のAgent Mode活用術 - 開発生産性3倍化2026\",\n  \"description\": \"Cursor 0.50 の Agent Mode を中級者が使いこなすための活用術。Chat / Composer / Agent の使い分け、Project Rules によるガードレール、生産性3倍を狙う1日の運用例を解説。\",\n  \"url\": \"https://musclelove-777.github.io/cursor-ai-master/articles/cursor-050-agent-mode-3x-productivity-2026.html\",\n  \"datePublished\": \"2026-04-29T08:11:34.844711\",\n  \"dateModified\": \"2026-04-29T08:11:34.844711\",\n  \"author\": {\n    \"@type\": \"Organization\",\n    \"name\": \"wave35d-ai-articles\"\n  },\n  \"keywords\": \"Cursor, Agent Mode, 生産性, Project Rules, Composer\",\n  \"articleSection\": \"Cursor 実践\",\n  \"inLanguage\": \"ja\"\n}\n</script>",
+    "<script type=\"application/ld+json\">\n{\n  \"@context\": \"https://schema.org\",\n  \"@type\": \"FAQPage\",\n  \"mainEntity\": [\n    {\n      \"@type\": \"Question\",\n      \"name\": \"Q1: 既存リポジトリにいきなり Agent を使うのは危険ですか？\",\n      \"acceptedAnswer\": {\n        \"@type\": \"Answer\",\n        \"text\": \"いきなり mass refactor を任せるのは危険です。まずは小さなジャンルのタスク（lint 警告解消など）で挙動を観察し、Project Rules を整えてから本格運用に進めるのが安全です。\"\n      }\n    },\n    {\n      \"@type\": \"Question\",\n      \"name\": \"Q2: Copilot Workspace と比べて Cursor の Agent はどう違いますか？\",\n      \"acceptedAnswer\": {\n        \"@type\": \"Answer\",\n        \"text\": \"Copilot Workspace は GitHub Issue 起点でクラウド側で完結する設計、Cursor の Agent はローカル IDE と密結合でファイル編集とターミナル実行を直接行う設計です。手元で見ながら進めたいなら Cursor、Issue から自動で動かしたいなら Copilot Workspace、という棲み分けです。\"\n      }\n    },\n    {\n      \"@type\": \"Question\",\n      \"name\": \"Q3: 料金プランはどれが向いていますか？\",\n      \"acceptedAnswer\": {\n        \"@type\": \"Answer\",\n        \"text\": \"Agent をフル活用するなら Pro 以上が現実的です。Hobby プランだとリクエスト枠が早めに尽きるケースが多いです。\"\n      }\n    }\n  ]\n}\n</script>",
+    "<script type=\"application/ld+json\">\n{\n  \"@context\": \"https://schema.org\",\n  \"@type\": \"BreadcrumbList\",\n  \"itemListElement\": [\n    {\n      \"@type\": \"ListItem\",\n      \"position\": 1,\n      \"name\": \"ホーム\",\n      \"item\": \"https://musclelove-777.github.io/cursor-ai-master\"\n    },\n    {\n      \"@type\": \"ListItem\",\n      \"position\": 2,\n      \"name\": \"Cursor 実践\",\n      \"item\": \"https://musclelove-777.github.io/cursor-ai-master/category/Cursor 実践\"\n    },\n    {\n      \"@type\": \"ListItem\",\n      \"position\": 3,\n      \"name\": \"Cursor 0.50時代のAgent Mode活用術 - 開発生産性3倍化2026\"\n    }\n  ]\n}\n</script>"
+  ],
+  "has_affiliate": false,
+  "affiliate_count": 0
+}
